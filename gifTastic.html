@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <title>GifTastic Homework</title>
+  <style type="text/css">
+    button {
+      margin: 5px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+   
+    <div class="row">
+      <div class="col-md-12" id="buttons">
+        BUTTONS
+      </div>
+    </div>
+
+    <div class="row">
+      
+      <div class="col-md-6" id="gifs">
+      GIFS
+      </div>
+
+      <div class="col-md-6">
+          <form action="query" class="text-box">
+            <label for="query"> 1) SEARCH FOR A BOTANICAL GIF</label>
+              
+              <input name= "query" type="text" id="search">
+              <input type="submit" id="submit"><br>              
+              <label for="instructionsToUser"> 2) NOW CLICK ON YOUR NEW BUTTON </label>
+          </form>
+      </div>
+
+    </div>
+
+
+  </div>
+
+  
+  
+  <script type="text/javascript">
+ $(document).ready(function(){
+
+    $('#submit').on('click', function(event){
+      event.preventDefault();
+
+  console.log('test');
+      var userInput = $('#search').val().trim();
+  console.log(userInput);
+      var topics = ["Oak Trees", "Boxwoods", "Tulips", "Citrus Trees", "Hedges"];
+  console.log(topics);
+
+      function renderButton(){
+        $('#buttons').empty();
+  console.log('test2');
+        for(var i = 0; i < topics.length; i++){
+          var a = $('<button>');
+          a.addClass('botanicalButton');
+          a.attr('data-name', topics[i]);
+  console.log(topics[i]);
+          a.text(topics[i]);
+          $('#buttons').append(a);
+        }
+  console.log(a);
+      }
+
+  console.log('test3');
+
+      function displayBotanicalGifs (){
+      
+        var topics = $(this).attr('data-name');
+  console.log(topics);
+        var queryURL = 'https://api.giphy.com/v1/gifs/search?q=' + userInput + '&api_key=0SDOQ40mrkegXUDqEz9W9LwCaYkZuoDz&limit=10&rating=g';
+  console.log(queryURL);
+  console.log(userInput);
+
+        $.ajax({
+        url: queryURL,
+        method: 'GET'
+        }).then(function(response){
+  console.log(response);
+        for(var i = 0; i < topics.length; i++){
+          var gifDiv = $('<div class="botanicalGif">');
+          var rating = response.rating;
+          var displayRating = $('<p>').text('General Audiences Rating: ' + rating);
+          gifDiv.prepend(displayRating);
+          
+          var imageUrl = response.data.image_original_url;
+          var botanicalImage = $('<img>');
+          botanicalImage.attr("src", topics[i].images.fixed_height.url);
+          botanicalImage.attr("src", imageUrl);
+          botanicalImage.attr("alt", "gif image");
+          $(gifDiv).prepend(botanicalImage);
+        }
+    });
+   }
+
+      renderButton();
+      displayBotanicalGifs();
+
+  });
+ });
+  </script>
+</body>
+</html>
