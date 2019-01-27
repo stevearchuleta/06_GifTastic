@@ -32,6 +32,7 @@
             <input name= "query" type="text" id="search">
             <input type="submit" id="submit"><br>              
             <label for="instructionsToUser"> 2) NOW CLICK ON YOUR NEW BUTTON </label>
+            <label for="instructionsToUser"> 3) NOW CLICK ON THE GIF TO MAKE IT ANIMATE </label>
           </form>
       </div>
     </div>
@@ -40,17 +41,11 @@
 
   
   
-<script type="text/javascript">
+  <script type="text/javascript">
  $(document).ready(function(){
 
-    $('#submit').on('click', function(event){
-      event.preventDefault();
-
-  console.log('test');
-      var userInput = $('#search').val().trim();
-  console.log(userInput);
-      var topics = ["Oak Tree", "Boxwood", "Daisy", "Citrus Tree", "Hedge"];
-  console.log(topics);
+    var topics = ["Oak Tree", "Boxwood", "Daisy", "Citrus Tree", "Hedge"];
+console.log(topics);
 
       function renderButton(){
         $('#buttons').empty();
@@ -66,12 +61,30 @@
   console.log($aGifButton);
       }
 
+      renderButton();
+   
+    $('#submit').on('click', function(event){
+      event.preventDefault();
+
+  console.log('test');
+      var userInput = $('#search').val().trim();
+  console.log(userInput);
+      
+      topics.push(userInput);
+
+
   console.log('test3');
 
+      renderButton();
+
+  });
+
+  $('#buttons').on('click', 'button', displayBotanicalGifs);
+
       function displayBotanicalGifs (){
-        var topics = $(this).attr('data-name');
-  console.log(topics);
-        var queryURL = 'https://api.giphy.com/v1/gifs/search?q=' + userInput + '&api_key=0SDOQ40mrkegXUDqEz9W9LwCaYkZuoDz&limit=10&rating=g';
+        var topic = $(this).attr('data-name');
+  console.log(topic);
+        var queryURL = 'https://api.giphy.com/v1/gifs/search?q=' + topic + '&api_key=0SDOQ40mrkegXUDqEz9W9LwCaYkZuoDz&limit=10&rating=g';
   console.log(queryURL);
   console.log(userInput);
 
@@ -79,27 +92,25 @@
         url: queryURL,
         method: 'GET'
         }).then(function(response){
+          results = response.data;
   console.log(response);
-        for(var i = 0; i < topics.length; i++){
-          var gifDiv = $('<div class="botanicalGif">');
-          var rating = response.data[0].rating;
+  console.log(results);
+        for(var i = 0; i < results.length; i++){
+          var gifDiv = $('#gifs');
+          
+          var rating = response.data[i].rating;
           var displayRating = $('<p>').text('General Audiences Rating: ' + rating);
           gifDiv.prepend(displayRating);
           
-          var gifUrl = response.data.image_original_url;
+          var gifUrl = response.data[i].image_original_url;
           var botanicalImage = $('<img>');
-          botanicalImage.attr("src", topics[i].images.fixed_height.url);
-          botanicalImage.attr("src", gifUrl);
+          botanicalImage.attr("src", gifStillUrl);
           botanicalImage.attr("alt", "gif image");
           $(gifDiv).prepend(botanicalImage);
         }
     });
+    $('#gifs').on('click', 'img', animationFunction);
    }
-
-      renderButton();
-      displayBotanicalGifs();
-
-  });
  });
   </script>
 </body>
