@@ -26,7 +26,8 @@
       <div class="col-md-6" id="gifs">
       GIFS
       </div>
-        <div class="col-md-6">
+
+      <div class="col-md-6">
           <form action="query" class="text-box">
             <label for="query"> 1) SEARCH FOR A BOTANICAL GIF</label>
             <input name= "query" type="text" id="search">
@@ -39,8 +40,6 @@
 
   </div>
 
-  
-  
   <script type="text/javascript">
  $(document).ready(function(){
 
@@ -49,7 +48,7 @@ console.log(topics);
 
       function renderButton(){
         $('#buttons').empty();
-  console.log('test2'); //test 2 is logged after test 3
+  console.log('test2');
         for(var i = 0; i < topics.length; i++){
           var $aGifButton = $('<button>');
           $aGifButton.addClass('botanicalButton');
@@ -72,21 +71,20 @@ console.log(topics);
       
       topics.push(userInput);
 
-
   console.log('test3');
 
       renderButton();
-
   });
 
   $('#buttons').on('click', 'button', displayBotanicalGifs);
 
       function displayBotanicalGifs (){
         var topic = $(this).attr('data-name');
+  console.log("POCO LOCO")
   console.log(topic);
         var queryURL = 'https://api.giphy.com/v1/gifs/search?q=' + topic + '&api_key=0SDOQ40mrkegXUDqEz9W9LwCaYkZuoDz&limit=10&rating=g';
   console.log(queryURL);
-  console.log(userInput);
+  console.log("EMERGENCY");
 
         $.ajax({
         url: queryURL,
@@ -96,20 +94,37 @@ console.log(topics);
   console.log(response);
   console.log(results);
         for(var i = 0; i < results.length; i++){
-          var gifDiv = $('#gifs');
+          var gifDiv = $('<div>');
           
-          var rating = response.data[i].rating;
-          var displayRating = $('<p>').text('General Audiences Rating: ' + rating);
+          var gifRating = response.data[i].images.rating;
+          var displayRating = $('<p>').text('General Audiences Rating: ' + gifRating);
           gifDiv.prepend(displayRating);
           
-          var gifUrl = response.data[i].image_original_url;
+          var gifStillUrl = response.data[i].images.downsized_still.url;
           var botanicalImage = $('<img>');
           botanicalImage.attr("src", gifStillUrl);
           botanicalImage.attr("alt", "gif image");
-          $(gifDiv).prepend(botanicalImage);
+          gifDiv.append(displayRating);
+          gifDiv.append(botanicalImage);
+          $('#gifs').prepend(gifDiv);
         }
     });
+    
     $('#gifs').on('click', 'img', animationFunction);
+    function animationFunction(){
+      // jQuery method to retreive the value of the attribute within the HTML element. Set the value to a variable.
+      var state = $(this).attr("data-state");
+      // If the image's state is still, update its src attribute to what its data-animate value is.
+      // Then, set the image's data-state to animate
+      if (state === "still") {
+        $(this).attr("src", $(this).attr("data-animate"));
+        $(this).attr("data-state", "animate");
+      // Else set src to the data-still value
+      } else {
+        $(this).attr("src", $(this).attr("data-still"));
+        $(this).attr("data-state", "still");
+      }
+    }
    }
  });
   </script>
