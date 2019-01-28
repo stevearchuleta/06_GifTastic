@@ -43,12 +43,12 @@
   <script type="text/javascript">
  $(document).ready(function(){
 
-    var topics = ["Oak Tree", "Boxwood", "Daisy", "Citrus Tree", "Hedge"];
-console.log(topics);
+    var topics = ["Oak Tree", "Boxwood", "Daisy", "Citrus Tree", "Shrub"];
+  console.log(topics);
 
       function renderButton(){
         $('#buttons').empty();
-  console.log('test2');
+  console.log('01-ALPHA');
         for(var i = 0; i < topics.length; i++){
           var $aGifButton = $('<button>');
           $aGifButton.addClass('botanicalButton');
@@ -65,26 +65,26 @@ console.log(topics);
     $('#submit').on('click', function(event){
       event.preventDefault();
 
-  console.log('test');
+  console.log('02-BETA');
       var userInput = $('#search').val().trim();
   console.log(userInput);
       
       topics.push(userInput);
 
-  console.log('test3');
+  console.log('03-GAMMA');
 
       renderButton();
   });
 
   $('#buttons').on('click', 'button', displayBotanicalGifs);
 
+  console.log('04-DELTA');
       function displayBotanicalGifs (){
         var topic = $(this).attr('data-name');
-  console.log("POCO LOCO")
-  console.log(topic);
+  console.log(topic)
         var queryURL = 'https://api.giphy.com/v1/gifs/search?q=' + topic + '&api_key=0SDOQ40mrkegXUDqEz9W9LwCaYkZuoDz&limit=10&rating=g';
   console.log(queryURL);
-  console.log("EMERGENCY");
+  console.log('05-EPSILON');
 
         $.ajax({
         url: queryURL,
@@ -95,25 +95,35 @@ console.log(topics);
   console.log(results);
         for(var i = 0; i < results.length; i++){
           var gifDiv = $('<div>');
-          
-          var gifRating = response.data[i].images.rating;
+  console.log(gifDiv);
+          var gifRating = response.data[i].rating;
+  console.log(gifRating);
           var displayRating = $('<p>').text('General Audiences Rating: ' + gifRating);
           gifDiv.prepend(displayRating);
-          
-          var gifStillUrl = response.data[i].images.downsized_still.url;
+  console.log(displayRating);
+          var gifUrl = response.data[i].images.original.url;
           var botanicalImage = $('<img>');
-          botanicalImage.attr("src", gifStillUrl);
+          botanicalImage.attr("src", gifUrl);
+          botanicalImage.attr('data-state', 'still');  
+  console.log(botanicalImage); 
+          // botanicalImage.attr('data-still', giflUrl);
+          // botanicalImage.attr('data-animate', gifUrl);
           botanicalImage.attr("alt", "gif image");
           gifDiv.append(displayRating);
           gifDiv.append(botanicalImage);
           $('#gifs').prepend(gifDiv);
         }
+  console.log('06-ZETA');
+  console.log(gifDiv);
     });
-    
+  console.log('07-ETA');
     $('#gifs').on('click', 'img', animationFunction);
     function animationFunction(){
-      // jQuery method to retreive the value of the attribute within the HTML element. Set the value to a variable.
+  console.log('08-THETA')
+      // jQuery method to retreive the value of the attribute within the HTML element '#gifs'. Set the value to a variable.
       var state = $(this).attr("data-state");
+  console.log(state);
+  console.log('09-IOTA');
       // If the image's state is still, update its src attribute to what its data-animate value is.
       // Then, set the image's data-state to animate
       if (state === "still") {
@@ -124,7 +134,9 @@ console.log(topics);
         $(this).attr("src", $(this).attr("data-still"));
         $(this).attr("data-state", "still");
       }
+  console.log('10-KAPPA');
     }
+  console.log('11-LAMBDA')
    }
  });
   </script>
