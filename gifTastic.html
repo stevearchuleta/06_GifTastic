@@ -101,10 +101,12 @@
           var displayRating = $('<p>').text('General Audiences Rating: ' + gifRating);
           gifDiv.prepend(displayRating);
   console.log(displayRating);
-          var gifUrl = response.data[i].images.original.url;
+          var gifUrl = response.data[i].images.downsized_still.url;
+          var movingGifUrl = response.data[i].images.original.url;
           var botanicalImage = $('<img>');
           botanicalImage.attr("src", gifUrl);
-          botanicalImage.attr('data-state', 'still');  
+          botanicalImage.attr('data-state', 'still'); 
+          botanicalImage.attr('data-moving', movingGifUrl); 
   console.log(botanicalImage); 
           // botanicalImage.attr('data-still', giflUrl);
           // botanicalImage.attr('data-animate', gifUrl);
@@ -122,12 +124,13 @@
   console.log('08-THETA')
       // jQuery method to retreive the value of the attribute within the HTML element '#gifs'. Set the value to a variable.
       var state = $(this).attr("data-state");
+  console.log($(this).attr("src"));
   console.log(state);
   console.log('09-IOTA');
       // If the image's state is still, update its src attribute to what its data-animate value is.
       // Then, set the image's data-state to animate
       if (state === "still") {
-        $(this).attr("src", $(this).attr("data-animate"));
+        $(this).attr("src", $(this).attr("data-moving"));
         $(this).attr("data-state", "animate");
       // Else set src to the data-still value
       } else {
